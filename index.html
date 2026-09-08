@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sheetal Studio</title>
+
+    <style>
+                
+           <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f7f9fc;
+            color: #2c3e50;
+            margin: 0;
+            padding: 0;
+            height: auto !important;
+            overflow-y: auto !important;
+        }
+        .hero-slider-container {
+            position: relative;
+            width: 100%;
+            height: 500px; 
+            overflow: hidden;
+            background-color: #000000;
+            z-index: 1;
+        }
+        .slide {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .slide.active { opacity: 1; }
+        .slide-blur-bg {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            object-fit: cover;
+            filter: blur(20px) brightness(40%);
+            transform: scale(1.1);
+            z-index: 1;
+        }
+        .slide-main-img {
+            position: relative;
+            height: 90%; width: auto; object-fit: contain;
+            z-index: 2; border-radius: 8px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+        }
+        header {
+            position: absolute;
+            top: 0; left: 0; width: 100%; box-sizing: border-box;
+            padding: 20px 40px; display: grid;
+            grid-template-columns: auto 1fr auto; align-items: center; z-index: 10;
+        }
+        header img {
+            width: 70px !important; height: 70px !important;  
+            border-radius: 50% !important; object-fit: cover !important;  
+            border: 2px solid #ffffff !important; box-shadow: 0 4px 10px rgba(0,0,0,0.2) !important; 
+            display: block !important;
+        }
+        header nav { display: flex; gap: 20px; z-index: 20 !important; }
+        header nav a {
+            text-decoration: none; color: #ffffff !important; 
+            font-weight: bold; font-size: 16px; text-shadow: 0 2px 5px rgba(0,0,0,0.5);
+        }
+        header nav a:hover { color: #a7ffba !important; }
+        .hero-center-content {
+            position: absolute; top: 55%; left: 50%;
+            transform: translate(-50%, -50%); text-align: center;
+            width: 90%; max-width: 800px; z-index: 5;
+            color: #ffffff; text-shadow: 2px 2px 10px rgba(0,0,0,0.8);
+        }
+        .hero-center-content h1 { margin: 0; font-size: 42px; font-weight: bold; }
+        .hero-center-content p { margin: 10px 0 0 0; font-size: 18px; font-weight: 700; letter-spacing: 2px; color: #ffeaa7; }
+        .main-content {
+            position: relative; background-color: #f7f9fc !important;
+            z-index: 5; padding: 20px; margin-top: 0; display: block;
+        }
+        .products-grid { display: flex; gap: 20px; margin-top: 20px; }
+        .category-box {
+            flex: 1; background-color: #ffffff; padding: 20px; border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.02); border-left: 5px solid #7455a4; 
+            display: flex; flex-direction: column; justify-content: space-between;
+        }
+        .category-box h3 { margin-top: 0; color: #1c5287; text-align: center; min-height: 50px; }
+        .product-img { width: 100%; height: 380px; object-fit: contain; background-color: #fafafa; border-radius: 6px; margin: 10px 0; }
+        button {
+            background-color: #e3385a; color: white; border: none; padding: 12px 20px;
+            font-size: 16px; font-weight: bold; border-radius: 6px; cursor: pointer;
+            width: 100%; transition: background-color 0.2s ease; margin-top: 10px;
+        }
+        button:hover { background-color: #c21d3f; }
+        .features-container { display: flex; gap: 25px; margin-top: 20px; }
+        .feature-item {
+            flex: 1; background-color: #ffffff; padding: 25px; border-radius: 10px;
+            text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.02); transition: transform 0.2s ease;
+        }
+        .feature-item:hover { transform: translateY(-5px); }
+        .feature-item h3 { color: #1c5287; }
+        .feature-icon {
+            font-size: 35px; margin-bottom: 15px; background-color: #fff0f2; 
+            width: 70px; height: 70px; line-height: 70px; border-radius: 50%;
+            margin-left: auto; margin-right: auto;
+        }
+        .steps-container { display: flex; gap: 20px; margin-top: 20px; }
+        .step-item {
+            flex: 1; background: #ffffff; padding: 20px; border-radius: 10px;
+            text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.02); border-top: 4px solid #7455a4;
+        }
+        .step-number { font-size: 24px; font-weight: bold; color: #e3385a; margin-bottom: 10px; }
+        .reviews-container { display: flex; gap: 20px; margin-top: 20px; }
+        .review-card { flex: 1; background: #ffffff; padding: 20px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.02); position: relative; }
+        .stars { color: #f1c40f; margin-bottom: 10px; font-size: 18px; }
+        .client-name { font-weight: bold; margin-top: 15px; color: #1c5287; font-size: 14px; }
+        .upcoming-box { position: relative; border-left: 5px solid #7455a4; transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1); }
+        .small-card { padding: 15px; }
+        .small-card h3 { font-size: 18px; min-height: 40px; }
+        .small-card p { font-size: 14px; }
+        .upcoming-img { filter: grayscale(80%) blur(1px); opacity: 0.7; transition: all 0.4s ease; }
+        .small-img { height: 220px !important; }
+        .launch-badge {
+            position: absolute; top: 15px; right: 15px; background-color: #1c5287;
+            color: white; padding: 5px 12px; font-size: 12px; font-weight: bold; border-radius: 20px; z-index: 2;
+        }
+        .disabled-btn { background-color: #bdc3c7 !important; color: #7f8c8d !important; cursor: not-allowed !important; }
+        .small-card button { padding: 8px 15px; font-size: 14px; }
+        .upcoming-box:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 10px 30px rgba(227, 56, 90, 0.25), 0 1px 15px rgba(28, 82, 135, 0.2);
+            border-left: 5px solid #e3385a;
+        }
+        .upcoming-box:hover .upcoming-img { filter: grayscale(0%) blur(0); opacity: 1; }
+        .contact-box {
+            background-color: #ffffff; max-width: 600px; margin: 30px auto 0 auto; padding: 30px;
+            border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); text-align: center; border-top: 5px solid #1c5287;
+        }
+        .contact-info { display: flex; flex-direction: column; gap: 15px; margin-top: 20px; align-items: center; }
+        .contact-item { font-size: 16px; color: #2c3e50; }
+        .contact-item a { color: #e3385a; text-decoration: none; font-weight: bold; }
+        .contact-item a:hover { text-decoration: underline; }
+        section { padding: 25px 0; }
+        #why-choose-us h2, #products h2, #contact h2, #how-it-works h2, #reviews h2 { text-align: center; color: #1c5287; }
+        footer { text-align: center; padding: 30px 20px; color: #777777; border-top: 1px solid #e1e8ed; margin-top: 40px; }
+            
+        
+        .search-container {
+            max-width: 500px;
+            margin: 25px auto;
+            display: flex;
+            gap: 10px;
+        }
+        .search-input {
+            flex: 1;
+            padding: 10px 15px;
+            border: 2px solid #e1e8ed;
+            border-radius: 6px;
+            font-size: 15px;
+            outline: none;
+        }
+        .search-input:focus {
+            border-color: #1c5287;
+        }
+        .search-btn {
+            background-color: #1c5287;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+                   
+        .about-flex-container {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+            border-bottom: 5px solid #e3385a;
+            max-width: 950px; 
+            margin: 25px auto 0 auto;
+            
+            
+            display: flex;
+            align-items: center; 
+            gap: 40px; 
+        }
+
+       
+        .about-left-banner {
+            flex: 1;
+            text-align: center;
+        }
+
+        .about-left-banner img {
+            width: 100%;
+            max-width: 280px; 
+            height: 380px;    
+            border-radius: 8px;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.05);
+            display: block;
+            margin: 0 auto;
+        }
+
+        
+        .about-right-text {
+            flex: 1.5; 
+            text-align: left;
+        }
+
+        .about-right-text h3 {
+            color: #1c5287;
+            margin-top: 0;
+            font-size: 24px;
+            margin-bottom: 15px;
+        }
+
+        .about-right-text p {
+            color: #2c3e50;
+            font-size: 15px;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+
+
+        .footer-nav {
+            margin: 15px 0;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+        .footer-nav a {
+            color: #1c5287;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+        }
+        .footer-nav a:hover {
+            color: #e3385a;
+            text-decoration: underline;
+        }
+
+       
+        .faq-container {
+            max-width: 800px;
+            margin: 20px auto;
+        }
+        .faq-item {
+            background-color: #ffffff;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.02);
+            border-left: 4px solid #1c5287;
+            overflow: hidden;
+        }
+        
+        .faq-question {
+            padding: 18px 20px;
+            margin: 0;
+            color: #1c5287;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            user-select: none;
+            background-color: #ffffff;
+            transition: background-color 0.2s ease;
+        }
+        .faq-question:hover {
+            background-color: #f7f9fc;
+        }
+        
+        .faq-arrow {
+            font-size: 14px;
+            transition: transform 0.3s ease; 
+        }
+        
+        .faq-answer {
+            max-height: 0; 
+            overflow: hidden;
+            padding: 0 20px; 
+            color: #555;
+            font-size: 14px;
+            line-height: 1.6;
+            transition: max-height 0.3s ease-out, padding 0.3s ease-out; 
+        }
+      
+        .faq-item.active .faq-answer {
+            max-height: 150px; 
+            padding: 0 20px 18px 20px; 
+        }
+        .faq-item.active .faq-arrow {
+            transform: rotate(180deg); 
+        }
+
+
+       
+        .requirement-box {
+            background-color: #ffffff;
+            max-width: 600px;
+            margin: 30px auto;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            text-align: center;
+            border: 2px dashed #e3385a; 
+        }
+        .requirement-box input, .requirement-box textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            box-sizing: border-box;
+        }
+        .submit-btn {
+            background-color: #e3385a;
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+        .submit-btn:hover {
+            background-color: #c21d3f;
+        }
+       
+        .category-tag {
+            display: inline-block;
+            padding: 4px 12px;
+            font-size: 12px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-radius: 4px;
+            margin-bottom: 12px;
+            align-self: flex-start; 
+        }
+        
+        
+        .tag-kids {
+            background-color: #fff0f2; 
+            color: #e3385a;            
+        }
+        
+        .tag-kitchen {
+            background-color: #eef5fc; 
+            color: #1c5287;           
+        }
+        
+        .tag-wellness {
+            background-color: #f3effa; 
+            color: #7455a4;            
+        }
+       
+        @media (max-width: 768px) {
+            
+            .products-grid, .features-container, .steps-container, .reviews-container {
+                display: flex;
+                flex-direction: column !important; 
+                gap: 20px;
+            }
+            
+           
+            .category-box, .feature-item, .step-item, .review-card {
+                width: 100% !important;
+                box-sizing: border-box;
+            }
+
+           
+            .step-item {
+                margin-bottom: 10px;
+            }
+
+           
+            .hero-slider-container {
+                height: 350px !important;
+            }
+            
+            .hero-center-content h1 {
+                font-size: 28px !important;
+            }
+            
+            .hero-center-content p {
+                font-size: 14px !important;
+            }
+
+            
+            .about-flex-container {
+                flex-direction: column !important;
+                text-align: center;
+            }
+            .about-right-text {
+                text-align: center;
+            }
+        }
+
+    </style>
+
+    
+</head>
+<body>
+
+    
+    <div class="hero-slider-container">
+        <header>
+            <div class="logo-container">
+                <img src="file:///C:/Users/Lenovo/Desktop/learning%20html/images/logo.jpeg" alt="Sheetal Studio Logo">
+            </div>
+            <div></div> 
+                        <nav>
+                <a href="#home">Home</a>
+                <a href="#products">Products</a>
+                <a href="#about-us">About Us</a>
+                <a href="#upcoming-products">Coming Soon</a>
+                <a href="#contact">Contact</a>
+            </nav>
+
+        </header>
+
+        <div class="hero-center-content">
+            <h1>Welcome to Sheetal Studio ✨</h1>
+            <p>DIGITAL PRINTABLES & GUIDES</p>
+        </div>
+
+       
+        <div class="slide active">
+            <img src="c:\Users\Lenovo\Desktop\learning html\images\slide3.jpeg" class="slide-blur-bg" alt="Blur Background">
+            <img src="c:\Users\Lenovo\Desktop\learning html\images\slide3.jpeg" class="slide-main-img" alt="Main Book Cover">
+        </div>
+        
+        <div class="slide">
+            <img src="c:\Users\Lenovo\Desktop\learning html\images\stressed-relief.jpeg" class="slide-blur-bg" alt="Blur Background">
+            <img src="c:\Users\Lenovo\Desktop\learning html\images\stressed-relief.jpeg" class="slide-main-img" alt="Main Book Cover">
+        </div>
+        
+        <div class="slide">
+            <img src="c:\Users\Lenovo\Desktop\learning html\images\slide2.jpeg" class="slide-blur-bg" alt="Blur Background">
+            <img src="c:\Users\Lenovo\Desktop\learning html\images\slide2.jpeg" class="slide-main-img" alt="Main Book Cover">
+        </div>
+    </div>
+
+   
+    <div class="main-content">
+
+       
+        <section id="home" style="text-align: center; padding: 40px 20px; background-color: white; border-radius: 12px; margin-top: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.02);">
+            <h2 style="color: #1c5287; margin-top: 0;">Discover useful and creative digital products for learning and everyday life.</h2>
+            <p style="color: #666; font-size: 16px; max-width: 600px; margin: 0 auto;">Premium quality, instantly downloadable, and ready-to-print PDF files designed to make your daily routine organized and fun!</p>
+        </section>
+
+              
+        <div class="search-container">
+            <input type="text" placeholder="Search printable worksheets, planners..." class="search-input">
+            <button class="search-btn">Search 🔍</button>
+        </div>
+
+        <section id="products">
+            <h2>Our Digital Products 📚📝</h2>
+            
+            <div class="products-grid">
+                <div class="category-box">
+                    <span class="category-tag tag-kids">Kids Learning</span>
+                    <h3>👶 Kids Worksheets & Learning PDFs</h3>
+                    <img src="c:\Users\Lenovo\Desktop\learning html\images\Study-hacks.jpeg" alt="Hacks to Learn & Enjoy Study Cover" class="product-img">
+                    <p>A beautiful collection of alphabet tracing, creative drawing sheets, and basic math puzzle activities for kids aged 3-8.</p>
+                    <p><strong>Price: ₹99</strong></p>
+                    <a href="https://myinstamojo.com" target="_blank"><button>Buy Now 📥</button></a>
+                </div>
+
+                <div class="category-box">
+                    <span class="category-tag tag-kitchen">Kitchen & Home</span>
+                    <h3>🍳 Kitchen Tips & Daily Planners</h3>
+                    <img src="c:\Users\Lenovo\Desktop\learning html\images\kitchen-tips.jpeg" alt="Kitchen Tips Cover" class="product-img">
+                    <p>Simplify your meal planning, maintain grocery checklists, and track your daily kitchen tasks effortlessly with useful smart tips.</p>
+                    <p><strong>Price: ₹49</strong></p>
+                    <a href="#" target="_blank"><button>Buy on Payhip 🛒</button></a>
+                </div>
+
+                <div class="category-box">
+                     <span class="category-tag tag-wellness">Health & Wellness</span>
+                    <h3>💻 Stressed Today, Strong Tomorrow!</h3>
+                    <img src="c:\Users\Lenovo\Desktop\learning html\images\stressed-relief.jpeg" alt="Stress Relief Activity Cover" class="product-img">
+                    <p>Quick practical ideas, easy steps, mind calm exercises, and healthy productivity trackers for overcoming overwhelm.</p>
+                    <p><strong>Price: ₹79</strong></p>
+                    <a href="#" target="_blank"><button>Visit Topmate 🛍️</button></a>
+                </div>
+            </div> 
+        </section>
+        <hr style="border: 0; border-top: 1px solid #e1e8ed; margin: 30px 0;">
+
+        
+        <section id="why-choose-us">
+            <h2>Why Choose Sheetal Studio? 🤔</h2>
+            
+            <div class="features-container">
+                <div class="feature-item">
+                    <div class="feature-icon">⚡</div>
+                    <h3>Easy to Use</h3>
+                    <p>Get instant access right after payment. Files are immediately sent to your email for quick saving.</p>
+                </div>
+
+                <div class="feature-item">
+                    <div class="feature-icon">  ️</div>
+                    <h3>Printable at Home</h3>
+                    <p>All items are perfectly formatted for standard A4 size printing. Print as many crisp, high-resolution copies as you need.</p>
+                </div>
+
+                <div class="feature-item">
+                    <div class="feature-icon">💡</div>
+                    <h3>Everyday Learning</h3>
+                    <p>The ultimate practical resource built specifically to improve children's learning curves and optimize daily family tracking.</p>
+                </div>
+            </div>
+        </section>
+        <hr style="border: 0; border-top: 1px solid #e1e8ed; margin: 30px 0;">
+
+      
+        <section id="how-it-works">
+            <h2>How It Works 🚀</h2>
+            <p style="text-align: center; color: #666;">Get your favorite printable PDFs in 3 easy steps!</p>
+            
+            <div class="steps-container">
+                <div class="step-item">
+                    <div class="step-number">01</div>
+                    <h3>Choose & Order</h3>
+                    <p>Select the PDF bundle you need and complete the secure payment.</p>
+                </div>
+                <div class="step-item">
+                    <div class="step-number">02</div>
+                    <h3>Instant Download</h3>
+                    <p>Receive the high-quality PDF link instantly on your screen and email.</p>
+                </div>
+                <div class="step-item">
+                    <div class="step-number">03</div>
+                    <h3>Print & Enjoy</h3>
+                    <p>Print at home or local shop as many times as you want and start using it!</p>
+                </div>
+            </div>
+        </section>
+        <hr style="border: 0; border-top: 1px solid #e1e8ed; margin: 30px 0;">
+
+        
+        <section id="reviews">
+            <h2>What Our Customers Say ⭐</h2>
+            
+            <div class="reviews-container">
+                <div class="review-card">
+                    <div class="stars">⭐⭐⭐⭐⭐</div>
+                    <p>"The Kids Worksheets are amazing! My 5-year-old son loves the colorful hacks and enjoys studying now. Highly recommended!"</p>
+                    <div class="client-name">- Pallavi B. (Parent)</div>
+                </div>
+                <div class="review-card">
+                    <div class="stars">⭐⭐⭐⭐⭐</div>
+                    <p>"The Kitchen Tips and Daily Menu Planner saved my everyday stress. Now my week is perfectly organized. Very useful resource!"</p>
+                    <div class="client-name">- Meera K. (Homemaker)</div>
+                </div>
+                <div class="review-card">
+                    <div class="stars">⭐⭐⭐⭐⭐</div>
+                    <p>"Being an IT professional, the stress-free activity sheets and desk workouts are a lifesaver for my back pain. Excellent quality print."</p>
+                    <div class="client-name">- Pratik B. (Software Engineer)</div>
+                </div>
+            </div>
+        </section>
+        <hr style="border: 0; border-top: 1px solid #e1e8ed; margin: 30px 0;">
+
+        
+        <section id="upcoming-products">
+            <h2>Coming Soon... 🌟</h2>
+            <p style="text-align: center; color: #666; margin-bottom: 25px;">Sneak peek into our next premium digital creations launching soon!</p>
+            
+            <div class="products-grid">
+                <div class="category-box upcoming-box small-card">
+                    <div class="launch-badge">Next Week 🚀</div>
+                    <h3>📅 Kids Routine Planner</h3>
+                    <img src="c:\Users\Lenovo\Desktop\learning html\images\kids-planner.jpeg" alt="Upcoming Kids Planner" class="product-img upcoming-img small-img">
+                    <p>Help children build healthy habits with this fun daily tracking sheet.</p>
+                    <button class="disabled-btn" disabled>Coming Soon ⏳</button>
+                </div>
+
+                <div class="category-box upcoming-box small-card">
+                    <div class="launch-badge">In Progress 🎨</div>
+                    <h3>💼 Office Desk Kit</h3>
+                    <img src="c:\Users\Lenovo\Desktop\learning html\images\office-wellness.jpeg" alt="Upcoming Office Kit" class="product-img upcoming-img small-img">
+                    <p>Maximize your daily focus with minimalist printable calendars and goal logs.</p>
+                    <button class="disabled-btn" disabled>Coming Soon ⏳</button>
+                </div>
+
+                <div class="category-box upcoming-box small-card">
+                    <div class="launch-badge">Designing 💡</div>
+                    <h3>🥦 Smart Diet Tracker</h3>
+                    <img src="c:\Users\Lenovo\Desktop\learning html\images\diet-plan.jpeg" alt="Upcoming Diet Tracker" class="product-img upcoming-img small-img">
+                    <p>Track your healthy meals, water intake and weekly grocery habits easily.</p>
+                    <button class="disabled-btn" disabled>Coming Soon ⏳</button>
+                </div>
+            </div>
+        </section>
+                <hr style="border: 0; border-top: 1px solid #e1e8ed; margin: 30px 0;">
+
+       
+                
+               
+        <section id="about-us">
+            <h2>About Sheetal Studio 🌸</h2>
+            <div class="about-flex-container">
+                
+                
+                <div class="about-left-banner">
+                    <img src="c:\Users\Lenovo\Desktop\learning html\images\about-us.jpeg" alt="Sheetal Studio Creative Printables">
+                </div>
+                
+                
+                <div class="about-right-text">
+                    <h3>Empowering Creative Learning & Organization</h3>
+                    <p>Welcome to Sheetal Studio! We specialize in creating premium quality, instantly downloadable and ready-to-print digital files. Our products are thoughtfully designed to simplify parenting, declutter daily routine tasks, and encourage preschool learning through playful resources.</p>
+                    <p>Whether you need worksheets for your kids, planners for your smart kitchen or health trackers for a busy office lifestyle, we are here to provide simple, affordable, and lifelong printable setups!</p>
+                </div>
+
+            </div>
+        </section>
+
+
+        <hr style="border: 0; border-top: 1px solid #e1e8ed; margin: 30px 0;">
+
+        
+        <section id="request-book">
+            <h2 style="text-align: center; color: #1c5287;">Suggest a Product / Book 💡</h2>
+            <p style="text-align: center; color: #666;">Tell us what printable bundle or learning book you need next and we will design it for you!</p>
+            
+            <div class="requirement-box">
+                
+                <form action="mailto:sheetalboddu0022@gmail.com" method="post" enctype="text/plain">
+                    <input type="text" name="Name" placeholder="Your Name" required>
+                    <input type="email" name="Email" placeholder="Your Email Address" required>
+                    <textarea name="Suggestion" rows="4" placeholder="Describe the book or worksheet topic you want us to create..." required></textarea>
+                    <button type="submit" class="submit-btn">Send Suggestion ✉️</button>
+                </form>
+            </div>
+        </section>
+
+        <hr style="border: 0; border-top: 1px solid #e1e8ed; margin: 30px 0;">
+
+    
+               
+        <section id="faqs">
+            <h2>Frequently Asked Questions ❓</h2>
+            <div class="faq-container">
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Q1. How will I receive the printable PDFs after payment?</span>
+                        <span class="faq-arrow">▼</span>
+                    </div>
+                    <div class="faq-answer">
+                        Immediately after successful payment, you will get an instant download link on your screen. A secure download copy will also be sent straight to your registered email address.
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Q2. Can I print these files multiple times?</span>
+                        <span class="faq-arrow">▼</span>
+                    </div>
+                    <div class="faq-answer">
+                        Yes, absolutely. Once downloaded, the digital files are yours forever. You can print them as many times as you want at home or at any local print shop.
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Q3. What page size are these guides designed for?</span>
+                        <span class="faq-arrow">▼</span>
+                    </div>
+                    <div class="faq-answer">
+                        All our digital printable sheets are perfectly formatted and optimized for standard A4 paper size, ensuring crisp and clean printing.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="contact">
+        <h2>Get in Touch 📞</h2>
+        <div class="contact-box">
+            <h3>Contact Information</h3>
+            <p>Have questions or need assistance with your downloads? Feel free to reach out!</p>
+            
+            <div class="contact-info">
+                <div class="contact-item">
+                    📞 <strong>Phone:</strong> <a href="tel:+919373656781">+91 9373656781</a>
+                </div>
+                <div class="contact-item">
+                    ✉️ <strong>Email:</strong> <a href="mailto:sheetalboddu0022@gmail.com">sheetalboddu0022@gmail.com</a>
+                </div>
+                <div class="contact-item">
+                    🌐 <strong>Website:</strong> <a href="https://sheetalstudio.github.io" target="_blank">sheetalstudio.github.io</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+        <hr style="border: 0; border-top: 1px solid #e1e8ed; margin: 30px 0;">
+
+    
+        <hr style="border: 0; border-top: 1px solid #e1e8ed; margin: 30px 0;">
+
+            
+        <footer>
+            <div class="footer-nav">
+                <a href="#home">Home</a> | 
+                <a href="#products">Products</a> | 
+                <a href="#about-us">About Us</a> | 
+                <a href="#contact">Contact Us</a>
+            </div>
+            <p style="margin-top: 15px;">📩 Contact Us: <strong>support@sheetalstudio.com</strong></p>
+            <p>&copy; 2026 Sheetal Studio. All Rights Reserved.</p>
+        </footer>
+
+    
+    <script>
+        const slides = document.querySelectorAll('.slide');
+        let currentSlideIndex = 0;
+
+        function showNextSlide() {
+            slides[currentSlideIndex].classList.remove('active');
+            currentSlideIndex = (currentSlideIndex + 1) % slides.length;
+            slides[currentSlideIndex].classList.add('active');
+        }
+
+       
+        setInterval(showNextSlide, 3000);
+                // SEARCH BAR LOGIC FUNCTION 🔍
+        const searchBtn = document.querySelector('.search-btn');
+        const searchInput = document.querySelector('.search-input');
+        const productCards = document.querySelectorAll('#products .category-box');
+
+        searchBtn.addEventListener('click', () => {
+            const searchText = searchInput.value.toLowerCase().trim();
+            
+            productCards.forEach(card => {
+                const cardTitle = card.querySelector('h3').textContent.toLowerCase();
+                const cardDesc = card.querySelector('p').textContent.toLowerCase();
+                
+
+                if (cardTitle.includes(searchText) || cardDesc.includes(searchText)) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        });
+
+        searchInput.addEventListener('keyup', (e) => {
+            if (e.key === 'Enter') {
+                searchBtn.click();
+            }
+        });
+        
+        const faqQuestions = document.querySelectorAll('.faq-question');
+
+        faqQuestions.forEach(question => {
+            question.addEventListener('click', () => {
+                const faqItem = question.parentElement;
+                faqItem.classList.toggle('active');
+            });
+        });
+
+    </script>
+</div>
+</body>
+</html>
