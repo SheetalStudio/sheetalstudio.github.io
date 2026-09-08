@@ -360,37 +360,57 @@
             color: #7455a4;            
         }
        
+             
         @media (max-width: 768px) {
             
-            .products-grid, .features-container, .steps-container, .reviews-container {
+           
+            .hero-slider-container {
+                height: auto !important; 
+                background-color: #1c5287 !important; 
                 display: flex;
-                flex-direction: column !important; 
-                gap: 20px;
-                     
+                flex-direction: column;
+            }
+
             header {
+                position: relative !important; 
                 display: flex !important;
                 flex-direction: column !important; 
                 align-items: center !important;
-                padding: 10px !important;
-                position: relative !important; 
+                padding: 15px 10px !important;
+                background-color: #1c5287 !important; 
+                width: 100% !important;
+                box-sizing: border-box;
             }
 
             header nav {
                 display: flex !important;
                 flex-wrap: wrap !important; 
                 justify-content: center !important;
-                gap: 12px !important;
+                gap: 10px !important;
                 margin-top: 15px !important;
                 width: 100% !important;
             }
 
             header nav a {
                 font-size: 14px !important; 
-                padding: 5px 8px !important;
-                background: rgba(28, 82, 135, 0.6); 
-                border-radius: 4px;
+                padding: 6px 10px !important;
+                background: rgba(255, 255, 255, 0.15) !important; 
+                border-radius: 4px !important;
+                color: #ffffff !important;
+                white-space: nowrap; 
             }
- 
+
+           
+            .slide {
+                position: relative !important;
+                height: 300px !important; 
+            }
+
+           
+            .products-grid, .features-container, .steps-container, .reviews-container {
+                display: flex;
+                flex-direction: column !important; 
+                gap: 20px;
             }
             
            
@@ -402,19 +422,6 @@
            
             .step-item {
                 margin-bottom: 10px;
-            }
-
-           
-            .hero-slider-container {
-                height: 350px !important;
-            }
-            
-            .hero-center-content h1 {
-                font-size: 28px !important;
-            }
-            
-            .hero-center-content p {
-                font-size: 14px !important;
             }
 
             
@@ -450,12 +457,7 @@
 
         </header>
 
-        <div class="hero-center-content">
-            <h1>Welcome to Sheetal Studio ✨</h1>
-            <p>DIGITAL PRINTABLES & GUIDES</p>
-        </div>
-
-       
+              
         <div class="slide active">
             <img src="images\slide3.jpeg" class="slide-blur-bg" alt="Blur Background">
             <img src="images\slide3.jpeg" class="slide-main-img" alt="Main Book Cover">
